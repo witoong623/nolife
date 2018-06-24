@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>เพิ่มภาคการศึกษา</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label>ภาคเรียน</ion-label>
+      <ion-select [(ngModel)]="semester" interface="popover">
+        <ion-option value="1">1</ion-option>
+        <ion-option value="2">2</ion-option>
+        <ion-option value="3">3</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>ปีการศึกษา</ion-label>
+      <ion-select [(ngModel)]="year" interface="popover">
+        <ion-option value="2561">2561</ion-option>
+        <ion-option value="2562">2562</ion-option>
+        <ion-option value="2563">2563</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <button ion-button>เพิ่ม</button>
+</ion-content>
