@@ -3,12 +3,17 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Semester</ion-title>
+    <ion-title>ภาคการศึกษา</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let semester of semesters" (click)="semesterSelected(semester)">
+      ภาคเรียนที่ {{semester.semester}} ปีการศึกษา {{semester.year}}
+    </button>  
+  </ion-list>
   <ion-fab bottom right>
     <button ion-fab color="primary" (click)="openAddSemester()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>

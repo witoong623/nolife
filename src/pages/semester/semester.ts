@@ -1,13 +1,8 @@
 import { AddSemesterPage } from './../add-semester/add-semester';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the SemesterPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Semester } from '../../models/semester';
+import { AppDbProvider } from '../../providers/app-db/app-db';
 
 @IonicPage()
 @Component({
@@ -15,12 +10,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'semester.html',
 })
 export class SemesterPage {
+  semesters: Semester[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public appDb: AppDbProvider) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SemesterPage');
+  ionViewDidEnter() {
+    this.appDb.getAllSemesters()
+        .then(results => this.semesters = results)
+        .catch(e => console.log('SemesterPage', e));
+  }
+
+  semesterSelected(semester: Semester) {
+
   }
 
   openAddSemester() {

@@ -3,11 +3,14 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Timetable</ion-title>
+    <ion-title>ตารางสอน</ion-title>
   </ion-navbar>
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content>
+  <super-tabs [config]="{sideMenu: 'left'}">
+    <div *ngFor="let timetable of timeTableDays">
+      <super-tab [root]="timetable.page" title="{{timetable.title}}" [rootParams]="{displayTitle: timetable.title}"></super-tab>
+    </div>
+  </super-tabs>
 </ion-content>

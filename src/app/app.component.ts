@@ -23,9 +23,9 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'Semester', component: SemesterPage },
-      { title: 'Timetable', component: TimetablePage },
+      { title: 'หน้าหลัก', component: HomePage },
+      { title: 'ตารางเรียน', component: TimetablePage },
+      { title: 'ภาคการศึกษา', component: SemesterPage },
       { title: 'List', component: ListPage }
     ];
 

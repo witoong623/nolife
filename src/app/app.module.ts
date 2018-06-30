@@ -12,9 +12,10 @@ import { SemesterPage } from '../pages/semester/semester';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SQLite } from '@ionic-native/sqlite';
-import { SQLiteMock} from '../mocks/sqlite';
+import { SuperTabsModule } from 'ionic2-super-tabs';
 
 import { AppDbProvider } from '../providers/app-db/app-db';
+import { TimetabletabPage } from '../pages/timetabletab/timetabletab';
 
 @NgModule({
   declarations: [
@@ -23,11 +24,13 @@ import { AppDbProvider } from '../providers/app-db/app-db';
     ListPage,
     TimetablePage,
     SemesterPage,
-    AddSemesterPage
+    AddSemesterPage,
+    TimetabletabPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    SuperTabsModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -36,17 +39,15 @@ import { AppDbProvider } from '../providers/app-db/app-db';
     ListPage,
     TimetablePage,
     SemesterPage,
-    AddSemesterPage
+    AddSemesterPage,
+    TimetabletabPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    { provide: SQLite, useClass: SQLiteMock },
+    SQLite,
     AppDbProvider
   ]
 })
 export class AppModule {}
-
-// TODO: delete this line when done testing
-export declare var SQL;

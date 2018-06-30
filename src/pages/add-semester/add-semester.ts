@@ -1,3 +1,4 @@
+import { Semester } from './../../models/semester';
 import { AppDbProvider } from './../../providers/app-db/app-db';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -14,8 +15,9 @@ export class AddSemesterPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public appDb: AppDbProvider) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad AddSemesterPage');
+  saveSemesterToDb() {
+    this.appDb.saveSemester(new Semester(this.semester, this.year))
+        .then(() => this.navCtrl.pop());
   }
 
   ngOnInit() {}
