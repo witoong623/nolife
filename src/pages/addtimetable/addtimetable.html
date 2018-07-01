@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>เพิ่มวิชาเรียน</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+    <ion-list margin-bottom>
+      <!-- subject id -->
+      <ion-list-header>รายละเอียดวิชา</ion-list-header>
+      <ion-item>
+        <ion-label floating>รหัสวิชา</ion-label>
+        <ion-input type="text" maxlength="7" formControlName="subId"></ion-input>
+      </ion-item>
+      <ion-item margin-bottom>
+        <ion-label floating>ชื่อวิชา</ion-label>
+        <ion-input type="text" maxlength="40" formControlName="subName"></ion-input>
+      </ion-item>
+      <ion-list-header>คาบเรียน</ion-list-header>
+      <div formArrayName="periods">
+        <section [formGroupName]="i" *ngFor="let period of form.controls.periods.controls; let i = index">
+          <ion-item-group>
+            <ion-item-divider color="light">คาบที่ {{i + 1}}</ion-item-divider>
+            <ion-item>
+              <ion-label>วัน</ion-label>
+              <ion-select formControlName="day">
+                <ion-option value="mon">จันทร์</ion-option>
+                <ion-option value="tue">อังคาร</ion-option>
+                <ion-option value="wed">พุธ</ion-option>
+                <ion-option value="thu">พฤหัส</ion-option>
+                <ion-option value="fri">ศุกร์</ion-option>
+                <ion-option value="sat">เสาร์</ion-option>
+                <ion-option value="sun">อาทิตย์</ion-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>เวลาเริ่มต้น</ion-label>
+              <ion-datetime displayFormat="h:m A" pickerFormat="h:m A" formControlName="startTime"></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>เวลาสิ้นสุด</ion-label>
+              <ion-datetime displayFormat="h:m A" pickerFormat="h:m A" formControlName="endTime"></ion-datetime>
+            </ion-item>
+
+            <!-- button to delete period fields -->
+            <span float-right ion-button icon-left clear *ngIf="form.controls.periods.length > 1" (click)="removeInputField(i)">
+              <ion-icon name="close"></ion-icon>
+              ลบคาบเรียน
+            </span>
+          </ion-item-group>
+        </section>
+      </div>
+
+      <!-- add more period button -->
+      <span ion-button float-left icon-left clear (click)="addNewInputField()">
+        <ion-icon name="add"></ion-icon>
+        เพิ่มคาบเรียน
+      </span>
+
+    </ion-list>
+    <!-- submit data button -->
+    <button ion-button block margin-top color="primary" text-center [disabled]="!form.valid">เพิ่มวิชาเรียน</button>
+  </form>
+</ion-content>

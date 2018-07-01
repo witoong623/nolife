@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { TimetabletabPage } from '../timetabletab/timetabletab';
+import { AddtimetablePage } from '../addtimetable/addtimetable';
 
 /**
  * Generated class for the TimetablePage page.
@@ -24,7 +25,8 @@ export class TimetablePage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
+  openAddTimetable(): void {
+    this.navCtrl.push(AddtimetablePage);
   }
 
 }

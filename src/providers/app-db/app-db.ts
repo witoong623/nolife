@@ -55,9 +55,14 @@ export class AppDbProvider {
       this.sqlite.create(this.options)
         .then((db: SQLiteObject) => {
           let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
-          db.executeSql(semestersSql, {})
+          let subjectSql = 'create table if not exists subjects (subId text primary key, name text)';
+          let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text)';
+          let semesterPromise = db.executeSql(semestersSql, {});
+          let subjectPromise = db.executeSql(subjectSql, {});
+          let periodsPromise = db.executeSql(periodSql, {});
+          Promise.all([semesterPromise, subjectPromise, periodsPromise])
             .then(() => {
-              console.log('created semesters table');
+              console.log('created all tables');
               resolve(db);
             });
         })
