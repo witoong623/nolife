@@ -1,4 +1,4 @@
-import { Semester } from './../../models/semester';
+import { Semester } from '../../models/models';
 import { AppDbProvider } from './../../providers/app-db/app-db';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';

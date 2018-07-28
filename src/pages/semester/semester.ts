@@ -1,7 +1,7 @@
 import { AddSemesterPage } from './../add-semester/add-semester';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Semester } from '../../models/semester';
+import { Semester } from '../../models/models';
 import { AppDbProvider } from '../../providers/app-db/app-db';
 
 @IonicPage()
