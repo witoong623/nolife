@@ -13,9 +13,21 @@
         <ion-label floating>รหัสวิชา</ion-label>
         <ion-input type="text" maxlength="7" formControlName="subId"></ion-input>
       </ion-item>
-      <ion-item margin-bottom>
+      <ion-item>
         <ion-label floating>ชื่อวิชา</ion-label>
         <ion-input type="text" maxlength="40" formControlName="subName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>อาจารย์ประจำวิชา</ion-label>
+        <ion-input type="text" maxlength="40" formControlName="lecturer"></ion-input>
+      </ion-item>
+      <ion-item margin-bottom>
+        <ion-label>ภาคเรียน</ion-label>
+        <ion-select formControlName="semester">
+          <ion-option *ngFor="let semester of availableSemesters" value="{{semester.semester}} {{semester.year}}">
+            เทอม {{semester.semester}} ปี {{semester.year}}
+          </ion-option>
+        </ion-select>
       </ion-item>
       <ion-list-header>คาบเรียน</ion-list-header>
       <div formArrayName="periods">
@@ -41,6 +53,10 @@
             <ion-item>
               <ion-label>เวลาสิ้นสุด</ion-label>
               <ion-datetime displayFormat="h:m A" pickerFormat="h:m A" formControlName="endTime"></ion-datetime>
+            </ion-item>
+            <ion-item>
+              <ion-label>ห้องเรียน</ion-label>
+              <ion-input type="text" maxlength="7" formControlName="room"></ion-input>
             </ion-item>
 
             <!-- button to delete period fields -->
