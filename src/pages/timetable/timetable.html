@@ -13,9 +13,18 @@
 </ion-header>
 
 <ion-content>
-  <super-tabs [config]="{sideMenu: 'left'}">
-    <div *ngFor="let timetable of timeTableDays">
-      <super-tab [root]="timetable.page" title="{{timetable.title}}" [rootParams]="{displayTitle: timetable.title}"></super-tab>
+  <super-tabs *ngIf="timeTableDays.length > 0; else showEmpty" [config]="{sideMenu: 'left'}">
+    <div *ngFor="let tb of timeTableDays">
+      <super-tab [root]="tb.page" title="{{tb.displayTitle}}" [rootParams]="{dayOftimetable: tb.day, displayTitle: tb.displayTitle, data: tb.data}"></super-tab>
     </div>
   </super-tabs>
+  <ng-template #showEmpty>
+    <div text-center padding>
+      <h3>ไม่มีตารางสอน</h3>
+      <button ion-button block icon-left (click)="openAddTimetable()">
+        <ion-icon name="add"></ion-icon>
+        เพิ่มตารางเรียน
+      </button>
+    </div>
+  </ng-template>
 </ion-content>
