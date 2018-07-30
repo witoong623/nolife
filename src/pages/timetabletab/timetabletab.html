@@ -1,9 +1,35 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{dayOftimetable}}</ion-title>
+    <ion-title>{{displayTitle}}</ion-title>
   </ion-navbar>
 </ion-header>
 
-
 <ion-content padding>
+  <ion-card *ngFor="let subject of subjects">
+    <ion-card-header>
+      <h2>{{subject.subId}} {{subject.name}}</h2>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ng-container *ngFor="let period of subject.periods">
+        <ng-container *ngIf="period.day == dayOftimetable">
+
+          <ion-grid>
+            <ion-row>
+              <ion-col col-3>
+                เริ่ม {{period.startTime}}
+              </ion-col>
+              <ion-col col-3>
+                ถึง {{period.endTime}}
+              </ion-col>
+              <ion-col col-6>
+                เป็นเวลา {{period.length}}
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          
+        </ng-container>
+      </ng-container>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
