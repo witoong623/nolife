@@ -82,25 +82,19 @@ export class AppDbProvider {
   }
 
   private connectToDb(): Promise<SQLiteObject> {
-    return new Promise<SQLiteObject>((resolve, reject) => {
-      this.sqlite.create(this.options)
-        .then((db: SQLiteObject) => {
-          let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
-          let subjectSql = 'create table if not exists subjects (subId text primary key, name text, ' +
-              'lecturer text, semester integer, year integer, ' + 
-              'foreign key(semester) references semesters(semester), foreign key(year) references semesters(year))';
-          let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
-              'subId text, foreign key(subId) references subjects(subId))';
-          let semesterPromise = db.executeSql(semestersSql, {});
-          let subjectPromise = db.executeSql(subjectSql, {});
-          let periodsPromise = db.executeSql(periodSql, {});
-          Promise.all([semesterPromise, subjectPromise, periodsPromise])
-            .then(() => {
-              console.log('created all tables');
-              resolve(db);
-            });
-        })
-        .catch(e => reject(e));
+    return this.sqlite.create(this.options)
+    .then((db: SQLiteObject) => {
+      let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
+      let subjectSql = 'create table if not exists subjects (subId text primary key, name text, ' +
+          'lecturer text, semester integer, year integer, ' + 
+          'foreign key(semester) references semesters(semester), foreign key(year) references semesters(year))';
+      let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
+          'subId text, foreign key(subId) references subjects(subId))';
+      let semesterPromise = db.executeSql(semestersSql, {});
+      let subjectPromise = db.executeSql(subjectSql, {});
+      let periodsPromise = db.executeSql(periodSql, {});
+      return Promise.all([semesterPromise, subjectPromise, periodsPromise])
+        .then(() => db);
     });
   }
 }
