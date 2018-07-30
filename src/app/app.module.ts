@@ -17,6 +17,7 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
 import { AppDbProvider } from '../providers/app-db/app-db';
 import { TimetabletabPage } from '../pages/timetabletab/timetabletab';
 import { AddtimetablePage } from '../pages/addtimetable/addtimetable';
+import { HomeworkPage } from '../pages/homework/homework';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AddtimetablePage } from '../pages/addtimetable/addtimetable';
     SemesterPage,
     AddSemesterPage,
     TimetabletabPage,
-    AddtimetablePage
+    AddtimetablePage,
+    HomeworkPage
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,8 @@ import { AddtimetablePage } from '../pages/addtimetable/addtimetable';
     SemesterPage,
     AddSemesterPage,
     TimetabletabPage,
-    AddtimetablePage
+    AddtimetablePage,
+    HomeworkPage
   ],
   providers: [
     StatusBar,

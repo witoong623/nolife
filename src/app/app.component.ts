@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { TimetablePage } from '../pages/timetable/timetable';
 import { SemesterPage } from '../pages/semester/semester';
+import { HomeworkPage } from '../pages/homework/homework';
 
 @Component({
   templateUrl: 'app.html'
@@ -26,7 +27,7 @@ export class MyApp {
       { title: 'หน้าหลัก', component: HomePage },
       { title: 'ตารางเรียน', component: TimetablePage },
       { title: 'ภาคการศึกษา', component: SemesterPage },
-      { title: 'List', component: ListPage }
+      { title: 'การบ้าน', component: HomeworkPage },
     ];
 
   }
