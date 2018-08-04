@@ -61,6 +61,21 @@ export class AppDbProvider {
       });
   }
 
+  getAllPeriods(): Promise<Period[]> {
+    let sql = 'select * from periods';
+    return this.dbObjectPromise
+      .then(db => db.executeSql(sql, {}))
+      .then(results => {
+        let periodsList: Period[] = [];
+        for (let i = 0; i < results.rows.length; i++) {
+          let row = results.rows.item(i);
+          periodsList.push(new Period(row.day, row.startTime, row.endTime, row.room, row.subId));
+        }
+
+        return periodsList;
+      });
+  }
+
   saveSemester(semester: Semester): Promise<void> {
     let sql = 'insert into semesters(semester, year) values(?, ?)';
     return this.dbObjectPromise.then(db => db.executeSql(sql, [semester.semester, semester.year]))
