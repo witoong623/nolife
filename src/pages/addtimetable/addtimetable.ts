@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, DateTime } from 'ionic-angular';
 import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
 import { Semester, Subject, Period, DayOfWeek } from '../../models/models';
 import { AppDbProvider } from '../../providers/app-db/app-db';
+import { getCurrentSemester } from '../../utilities/datetimeutility';
 
 @IonicPage()
 @Component({
@@ -14,15 +15,14 @@ export class AddtimetablePage {
   availableSemesters: Semester[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private appDb: AppDbProvider) {
-    const currentYear = (new Date()).getFullYear();
-    const currentSemester = this.getCurrentSemester();
+    const currentSemester = getCurrentSemester();
 
-    // TODO: do i have to specify default value of semester
+    // TODO: do i have to specify default value of semester?
     this.form = this.formBuilder.group({
       subId: ['', Validators.required],
       subName: ['', Validators.required],
       lecturer: ['', Validators.required],
-      semester: `${currentSemester} ${currentYear}`,
+      semester: `${currentSemester.semester} ${currentSemester.year}`,
       periods: this.formBuilder.array([this.initStudyTimeField()])
     });
   }
@@ -68,18 +68,5 @@ export class AddtimetablePage {
     this.appDb.getAllSemesters()
         .then(semesters => this.availableSemesters = semesters)
         .catch(e => console.log('AddtimetablePage', e));
-  }
-
-  // TODO: this method depends on fixed pattern of semester in Thailand
-  private getCurrentSemester(): number {
-    const currentMonth = (new Date()).getMonth();
-
-    if (currentMonth >= 9) {
-      return 2;
-    } else if (currentMonth >= 5) {
-      return 1;
-    } else {
-      return 3
-    }
   }
 }
