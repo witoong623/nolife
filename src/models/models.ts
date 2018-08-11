@@ -23,7 +23,7 @@ export class Period {
   private _length: string = null;
 
   constructor(public day: DayOfWeek, public startTime: string, public endTime: string, 
-    public room: string, public subId: string, public id?: number) {}
+    public room: string, public subId: string, public semester: Semester, public id?: number) {}
 
     get length(): string {
       if (this._length !== null) {
@@ -43,4 +43,18 @@ export class Period {
 
       return this._length;
     }
+}
+
+export class Homework {
+  private _deadline: moment.Moment;
+
+  constructor(public id: number, public topic: string, public description: string) {}
+
+  get deadline(): string {
+    return this._deadline.toLocaleString();
+  }
+
+  set deadline(strDeadline: string) {
+    this._deadline = moment(strDeadline);
+  }
 }

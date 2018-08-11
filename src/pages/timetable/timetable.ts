@@ -4,6 +4,7 @@ import { TimetabletabPage } from '../timetabletab/timetabletab';
 import { AddtimetablePage } from '../addtimetable/addtimetable';
 import { AppDbProvider } from '../../providers/app-db/app-db';
 import { Subject, Semester, DayOfWeek } from '../../models/models';
+import { getCurrentSemester } from '../../utilities/datetimeutility';
 
 @IonicPage()
 @Component({
@@ -23,14 +24,15 @@ export class TimetablePage {
   private createTabTimetable(): void {
     this.timeTableDays.length = 0;
     let subjects: Subject[];
-    this.appDb.getAllSubjects(new Semester(1, 2561))
+    let curSemester = getCurrentSemester()
+    this.appDb.getAllSubjects(curSemester)
       .then(results => {
         // results is only subjects but not include periods
         subjects = results;
 
         // fetch periods for each subject
         let periodsLoadPremises = subjects.map(subject => {
-          return this.appDb.getPeriods(subject.subId)
+          return this.appDb.getPeriods(subject.subId, curSemester)
             .then(periods => {
               subject.periods = periods;
               // return empty so that i get Promise<void>

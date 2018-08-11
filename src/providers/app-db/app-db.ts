@@ -4,8 +4,10 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 @Injectable()
 export class AppDbProvider {
+  private databaseName = 'experimentdb.db';
+
   options: any = {
-    name: 'data.db',
+    name: this.databaseName,
     location: 'default',
     createFromLocation: 1
   }
@@ -19,7 +21,7 @@ export class AppDbProvider {
   getAllSemesters(): Promise<Semester[]> {
     let sql = 'select * from semesters';
     return this.dbObjectPromise
-      .then(db => db.executeSql(sql, {}))
+      .then(db => db.executeSql(sql, []))
       .then(results => {
         let resultsList: Semester[] = [];
         for (let i = 0; i < results.rows.length; i++) {
@@ -38,23 +40,22 @@ export class AppDbProvider {
         let subjectList: Subject[] = [];
         for (let i = 0; i < results.rows.length; i++) {
           let row = results.rows.item(i);
-          let s = new Semester(row.semester, row.year);
-          subjectList.push(new Subject(row.subId, row.name, row.lecturer, s))
+          subjectList.push(new Subject(row.subId, row.name, row.lecturer, curSemester))
         }
 
         return subjectList;
       });
   }
 
-  getPeriods(subId: string): Promise<Period[]> {
-    let sql = 'select * from periods where subId = ?';
+  getPeriods(subId: string, curSemester: Semester): Promise<Period[]> {
+    let sql = 'select * from periods where subId = ? and semester = ? and year = ?';
     return this.dbObjectPromise
-      .then(db => db.executeSql(sql, [subId]))
+      .then(db => db.executeSql(sql, [subId, curSemester.semester, curSemester.year]))
       .then(results => {
         let periodsList: Period[] = [];
         for (let i = 0; i < results.rows.length; i++) {
           let row = results.rows.item(i);
-          periodsList.push(new Period(row.day, row.startTime, row.endTime, row.room, subId));
+          periodsList.push(new Period(row.day, row.startTime, row.endTime, row.room, subId, curSemester, row.id));
         }
 
         return periodsList;
@@ -64,12 +65,15 @@ export class AppDbProvider {
   getAllPeriods(): Promise<Period[]> {
     let sql = 'select * from periods';
     return this.dbObjectPromise
-      .then(db => db.executeSql(sql, {}))
+      .then(db => db.executeSql(sql, []))
       .then(results => {
         let periodsList: Period[] = [];
+        let curSemester: Semester = null;
+
         for (let i = 0; i < results.rows.length; i++) {
           let row = results.rows.item(i);
-          periodsList.push(new Period(row.day, row.startTime, row.endTime, row.room, row.subId));
+          curSemester = curSemester || new Semester(row.semester, row.year);
+          periodsList.push(new Period(row.day, row.startTime, row.endTime, row.room, row.subId, curSemester, row.id));
         }
 
         return periodsList;
@@ -78,38 +82,40 @@ export class AppDbProvider {
 
   saveSemester(semester: Semester): Promise<void> {
     let sql = 'insert into semesters(semester, year) values(?, ?)';
-    return this.dbObjectPromise.then(db => db.executeSql(sql, [semester.semester, semester.year]))
+    return this.dbObjectPromise.then(db => db.executeSql(sql, [semester.semester, semester.year]));
   }
 
   saveTimetable(sub: Subject): Promise<void> {
     let insertSubject = 'insert into subjects(subId, name, lecturer, semester, year) values(?,?,?,?,?)';
-    let insertPeriods = 'insert into periods(day, startTime, endTime, room, subId) values(?,?,?,?,?)';
+    let insertPeriods = 'insert into periods(day, startTime, endTime, room, subId, semester, year) values(?,?,?,?,?,?,?)';
     const periods = sub.periods;
     return this.dbObjectPromise
       .then(db => {
         db.transaction(tx => {
           tx.executeSql(insertSubject, [sub.subId, sub.name, sub.lecturer, sub.semester.semester, sub.semester.year])
           periods.forEach(period => {
-            tx.executeSql(insertPeriods, [period.day, period.startTime, period.endTime, period.room, period.subId]);
+            tx.executeSql(insertPeriods, [period.day, period.startTime, period.endTime, period.room, period.subId, sub.semester.semester, sub.semester.year]);
           });
         });
       });
   }
 
-  private connectToDb(): Promise<SQLiteObject> {
-    return this.sqlite.create(this.options)
-    .then((db: SQLiteObject) => {
-      let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
-      let subjectSql = 'create table if not exists subjects (subId text primary key, name text, ' +
-          'lecturer text, semester integer, year integer, ' + 
-          'foreign key(semester) references semesters(semester), foreign key(year) references semesters(year))';
-      let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
-          'subId text, foreign key(subId) references subjects(subId))';
-      let semesterPromise = db.executeSql(semestersSql, {});
-      let subjectPromise = db.executeSql(subjectSql, {});
-      let periodsPromise = db.executeSql(periodSql, {});
-      return Promise.all([semesterPromise, subjectPromise, periodsPromise])
-        .then(() => db);
-    });
+  private async connectToDb(): Promise<SQLiteObject> {
+    let db = await this.sqlite.create(this.options);
+
+    let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
+    let subjectSql = 'create table if not exists subjects (subId text, name text, ' +
+        'lecturer text, semester integer, year integer, primary key(subId, semester, year), ' +
+        'foreign key(semester, year) references semesters(semester, year))';
+    let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
+        'subId text, semester integer, year integer, foreign key(subId, semester, year) references subjects(subId, semester, year))';
+
+    let semesterPromise = db.executeSql(semestersSql, []);
+    let subjectPromise = db.executeSql(subjectSql, []);
+    let periodsPromise = db.executeSql(periodSql, []);
+
+    await Promise.all([semesterPromise, subjectPromise, periodsPromise]);
+
+    return db;
   }
 }

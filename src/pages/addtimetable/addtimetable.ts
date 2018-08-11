@@ -54,7 +54,7 @@ export class AddtimetablePage {
     let periods: Period[] = [];
 
     val.periods.forEach(period => {
-      let np = new Period(<DayOfWeek>period.day, period.startTime, period.endTime, period.room, val.subId);
+      let np = new Period(<DayOfWeek>period.day, period.startTime, period.endTime, period.room, val.subId, getCurrentSemester());
       periods.push(np);
     });
     s.periods = periods;
