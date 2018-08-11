@@ -48,7 +48,7 @@ export class Period {
 export class Homework {
   private _deadline: moment.Moment;
 
-  constructor(public id: number, public topic: string, public description: string) {}
+  constructor(public subject: Subject, public topic: string, public description: string, private submitAt: moment.Moment, public id?: number) {}
 
   get deadline(): string {
     return this._deadline.toLocaleString();

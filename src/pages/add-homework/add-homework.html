@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>เพิ่มการบ้าน</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+    <ion-list margin-bottom>
+      <ion-item>
+        <ion-label>วิชา</ion-label>
+        <ion-select formControlName="subject">
+          <ion-option *ngFor="let subject of availableSubjects" [value]="subject">
+            {{subject.name}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" floating>หัวข้อ</ion-label>
+        <ion-input formControlName="topic"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" floating>คำอธิบาย</ion-label>
+        <ion-textarea formControlName="description"></ion-textarea>
+      </ion-item>
+      <ion-item margin-top>
+        <ion-label>วันที่ต้องส่ง</ion-label>
+        <ion-datetime displayFormat="D MMM YYYY" [(ngModel)]="myDate" formControlName="submitDate"></ion-datetime>
+      </ion-item>
+      <ion-item margin-top>
+        <ion-label>เวลาที่ต้องส่ง</ion-label>
+        <ion-datetime displayFormat="hh:mm A" pickerFormat="h:m A" formControlName="submitTime"></ion-datetime>
+        </ion-item>
+    </ion-list>
+    <button ion-button block margin-top color="primary" text-center [disabled]="!form.valid">เพิ่มการบ้าน</button>
+  </form>
+</ion-content>

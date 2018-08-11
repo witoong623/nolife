@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the HomeworkPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Homework } from '../../models/models';
+import { AddHomeworkPage } from '../add-homework/add-homework';
 
 @IonicPage()
 @Component({
@@ -14,12 +9,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'homework.html',
 })
 export class HomeworkPage {
+  public homeworks: Homework[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad HomeworkPage');
+  homeworkSelected(homework: Homework): void {
+
+  }
+
+  openAddHomework(): void {
+    this.navCtrl.push(AddHomeworkPage);
   }
 
 }

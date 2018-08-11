@@ -18,6 +18,7 @@ import { AppDbProvider } from '../providers/app-db/app-db';
 import { TimetabletabPage } from '../pages/timetabletab/timetabletab';
 import { AddtimetablePage } from '../pages/addtimetable/addtimetable';
 import { HomeworkPage } from '../pages/homework/homework';
+import { AddHomeworkPage } from '../pages/add-homework/add-homework';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { HomeworkPage } from '../pages/homework/homework';
     AddSemesterPage,
     TimetabletabPage,
     AddtimetablePage,
-    HomeworkPage
+    HomeworkPage,
+    AddHomeworkPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,8 @@ import { HomeworkPage } from '../pages/homework/homework';
     AddSemesterPage,
     TimetabletabPage,
     AddtimetablePage,
-    HomeworkPage
+    HomeworkPage,
+    AddHomeworkPage
   ],
   providers: [
     StatusBar,
