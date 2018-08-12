@@ -4,7 +4,7 @@ import { AppDbProvider } from '../../providers/app-db/app-db';
 import { Subject, Semester, Homework } from '../../models/models';
 import { getCurrentSemester } from '../../utilities/datetimeutility';
 import { ModalController } from 'ionic-angular';
-import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 
 @IonicPage()
@@ -20,7 +20,6 @@ export class AddHomeworkPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public appDb: AppDbProvider,
-    public modalCtrl: ModalController,
     private formBuilder: FormBuilder) {
 
       this.form = this.formBuilder.group({
@@ -42,8 +41,8 @@ export class AddHomeworkPage {
   }
 
   onSubmit(val: any): void {
-    let submitAt = moment(`${val.submitDate} ${val.submitTime}`);
-    let homework = new Homework(val.subject, val.topic, val.description, submitAt);
-    
+    let homework = new Homework(val.subject, val.topic, val.description, `${val.submitDate} ${val.submitTime}`);
+    this.appDb.saveHomework(homework)
+      .then(() => this.navCtrl.pop());
   }
 }

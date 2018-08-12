@@ -8,10 +8,20 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-list>
     <button ion-item *ngFor="let homework of homeworks" (click)="homeworkSelected(homework)">
-      
+      <ion-grid>
+        <ion-row>
+          <ion-col>{{homework.topic}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>{{homework.subject.name}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>{{homework.submitAtStr}}</ion-col>
+        </ion-row>
+      </ion-grid>
     </button>
   </ion-list>
   <ion-fab bottom right>

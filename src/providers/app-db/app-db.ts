@@ -1,4 +1,4 @@
-import { Semester, Period, Subject } from '../../models/models';
+import { Semester, Period, Subject, Homework } from '../../models/models';
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -45,6 +45,32 @@ export class AppDbProvider {
 
         return subjectList;
       });
+  }
+
+  async getSubject(subId: string, semester: Semester): Promise<Subject> {
+    let sql = 'select * from subjects where subId = ? and semester = ? and year = ?';
+    
+    let db = await this.dbObjectPromise;
+    let result = await db.executeSql(sql, [subId, semester.semester, semester.year]);
+    let row = result.rows.item(0);
+
+    return new Subject(row.subId, row.name, row.lecturer, semester);
+  }
+
+  async getAllHomeworks(curSemester: Semester): Promise<Homework[]> {
+    let sql = 'select * from homeworks where semester = ? and year = ?';
+    let db = await this.dbObjectPromise;
+    let results = await db.executeSql(sql, [curSemester.semester, curSemester.year]);
+    let homeworksList: Homework[] = [];
+
+    for (let i = 0; i < results.rows.length; i++) {
+      let row = results.rows.item(i);
+      let subject = await this.getSubject(row.subId, curSemester);
+
+      homeworksList.push(new Homework(subject, row.topic, row.description, row.submitat, row.id));
+    }
+
+    return homeworksList;
   }
 
   getPeriods(subId: string, curSemester: Semester): Promise<Period[]> {
@@ -100,6 +126,19 @@ export class AppDbProvider {
       });
   }
 
+  saveHomework(homework: Homework): Promise<void> {
+    let sql = 'insert into homeworks(topic,description,submitat,subId,semester,year) values(?,?,?,?,?,?)';
+    let args = [
+      homework.topic,
+      homework.description,
+      homework.submitAtStr,
+      homework.subject.subId,
+      homework.subject.semester.semester,
+      homework.subject.semester.year
+    ]
+    return this.dbObjectPromise.then(db => db.executeSql(sql, args));
+  }
+
   private async connectToDb(): Promise<SQLiteObject> {
     let db = await this.sqlite.create(this.options);
 
@@ -109,12 +148,16 @@ export class AppDbProvider {
         'foreign key(semester, year) references semesters(semester, year))';
     let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
         'subId text, semester integer, year integer, foreign key(subId, semester, year) references subjects(subId, semester, year))';
+    let homeworkSql = 'create table if not exists homeworks (id integer primary key, topic	text, description text,' +
+                      'submitat text, subId text, semester integer, year integer,' +
+                      'foreign key(subId,semester,year) references subjects(subId,semester,year))';
 
     let semesterPromise = db.executeSql(semestersSql, []);
     let subjectPromise = db.executeSql(subjectSql, []);
     let periodsPromise = db.executeSql(periodSql, []);
+    let homeworksPromise = db.executeSql(homeworkSql, []);
 
-    await Promise.all([semesterPromise, subjectPromise, periodsPromise]);
+    await Promise.all([semesterPromise, subjectPromise, periodsPromise, homeworksPromise]);
 
     return db;
   }

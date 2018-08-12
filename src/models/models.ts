@@ -46,15 +46,21 @@ export class Period {
 }
 
 export class Homework {
-  private _deadline: moment.Moment;
+  private _submitAtStr: string = null;
+  private _submitAt: moment.Moment;
 
-  constructor(public subject: Subject, public topic: string, public description: string, private submitAt: moment.Moment, public id?: number) {}
-
-  get deadline(): string {
-    return this._deadline.toLocaleString();
+  constructor(public subject: Subject, public topic: string, public description: string, submitAtStr: string, public id?: number) {
+    this._submitAt = moment(submitAtStr);
   }
 
-  set deadline(strDeadline: string) {
-    this._deadline = moment(strDeadline);
+  get submitAtStr(): string {
+    if (this._submitAtStr === null) {
+      this._submitAtStr = this._submitAt.toISOString(true);
+    }
+    return this._submitAtStr;
+  }
+
+  get submitAt(): moment.Moment {
+    return this._submitAt;
   }
 }
