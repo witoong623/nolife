@@ -27,7 +27,63 @@ export class TimetabletabPage {
       return false;
     });
 
+    // sort to show period that comes first show first
+    // TODO: take care the case when a subject has 2 periods in same day
+    tempSubjects.sort((a, b) => {
+      let aPeriod: Period;
+      let bPeriod: Period;
+  
+      for (let period of a.periods) {
+        if (period.day === this.dayOftimetable) {
+          aPeriod = period;
+          break;
+        }
+      }
+  
+      for (let period of b.periods) {
+        if (period.day === this.dayOftimetable) {
+          bPeriod = period;
+          break;
+        }
+      }
+  
+      if (aPeriod.startMoment.isBefore(bPeriod.startMoment, 'minute')) {
+        return -1;
+      } else if (aPeriod.startMoment.isAfter(bPeriod.startMoment, 'minute')) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
     this.subjects = tempSubjects;
+  }
+
+  private comparePeriodSubject(a: Subject, b: Subject): number {
+    let aPeriod: Period;
+    let bPeriod: Period;
+
+    for (let period of a.periods) {
+      if (period.day === this.dayOftimetable) {
+        aPeriod = period;
+        break;
+      }
+    }
+
+    for (let period of b.periods) {
+      if (period.day === this.dayOftimetable) {
+        bPeriod = period;
+        break;
+      }
+    }
+
+    if (aPeriod.startMoment.isBefore(bPeriod.startMoment, 'minute')) {
+      return -1;
+    } else if (aPeriod.startMoment.isAfter(bPeriod.startMoment, 'minute')) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
 }

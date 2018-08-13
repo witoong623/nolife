@@ -21,9 +21,12 @@ export class Subject {
 
 export class Period {
   private _length: string = null;
+  private _startMoment: moment.Moment;
 
   constructor(public day: DayOfWeek, public startTime: string, public endTime: string, 
-    public room: string, public subId: string, public semester: Semester, public id?: number) {}
+    public room: string, public subId: string, public semester: Semester, public id?: number) {
+      this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm');;
+    }
 
     get length(): string {
       if (this._length !== null) {
@@ -31,9 +34,8 @@ export class Period {
       }
 
       let date = '1-1-1970';
-      let start = moment(`${date} ${this.startTime}`, 'DD-MM-YYYY HH:mm');
       let end = moment(`${date} ${this.endTime}`, 'DD-MM-YYYY HH:mm');
-      let duration = moment.duration(end.diff(start));
+      let duration = moment.duration(end.diff(this._startMoment));
 
       this._length = `${duration.hours()} ชั่วโมง`;
       
@@ -42,6 +44,10 @@ export class Period {
       }
 
       return this._length;
+    }
+
+    get startMoment(): moment.Moment {
+      return this._startMoment;
     }
 }
 
