@@ -7,12 +7,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Menu Starter</h3>
-
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+<ion-content>
+  <super-tabs *ngIf="timeTableDays.length > 0; else showEmpty" [config]="{sideMenu: 'left'}" [selectedTabIndex]="selectedTabIndex">
+    <div *ngFor="let tb of timeTableDays">
+      <super-tab [root]="tb.page" title="{{tb.displayTitle}}" [rootParams]="{dayOftimetable: tb.day, displayTitle: tb.displayTitle, data: tb.data}"></super-tab>
+    </div>
+  </super-tabs>
+  <ng-template #showEmpty>
+    <div text-center padding>
+      <h3>ไม่มีตารางสอน</h3>
+      <button ion-button block icon-left (click)="openAddTimetable()">
+        <ion-icon name="add"></ion-icon>
+        เพิ่มตารางเรียน
+      </button>
+    </div>
+  </ng-template>
 </ion-content>
