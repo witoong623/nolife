@@ -1,4 +1,4 @@
-import { Semester } from "../models/models";
+import { Semester, DayOfWeek } from "../models/models";
 
 // TODO: this function is apply only to Thailand
 export function getCurrentSemester(): Semester {
@@ -16,4 +16,23 @@ export function getCurrentSemester(): Semester {
     }
 
     return new Semester(currentSemester, currentYear);
+}
+
+export function getDisplayTitle(key: string) {
+  switch (key) {
+    case DayOfWeek.Monday:
+      return 'จันทร์';
+    case DayOfWeek.Tuesday:
+      return 'อังคาร';
+    case DayOfWeek.Wednesday:
+      return 'พุธ';
+    case DayOfWeek.Thursday:
+      return 'พฤหัส';
+    case DayOfWeek.Friday:
+      return 'ศุกร์';
+    case DayOfWeek.Saturday:
+      return 'เสาร์';
+    case DayOfWeek.Sunday:
+      return 'อาทิตย์';
+  }
 }
