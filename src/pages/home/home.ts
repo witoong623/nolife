@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { TimetabletabPage } from '../timetabletab/timetabletab';
 import { AddtimetablePage } from '../addtimetable/addtimetable';
 import { Subject } from '../../models/models';
@@ -23,7 +23,7 @@ export class HomePage {
     sun: 6
   };
 
-  constructor(public navCtrl: NavController, private appDb: AppDbProvider) {
+  constructor(public navCtrl: NavController,public plt: Platform, private appDb: AppDbProvider) {
     this.selectedTabIndex = this.selectTabIndex();
   }
 
@@ -90,7 +90,8 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    this.createTabTimetable();
+    this.plt.ready()
+      .then(src => this.createTabTimetable());
   }
 
 }
