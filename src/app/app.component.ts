@@ -4,8 +4,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
-import { TimetablePage } from '../pages/timetable/timetable';
 import { SemesterPage } from '../pages/semester/semester';
 import { HomeworkPage } from '../pages/homework/homework';
 import { SubjectPage } from '../pages/subject/subject';
@@ -26,7 +24,6 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'หน้าหลัก', component: HomePage },
-      { title: 'ตารางเรียน', component: TimetablePage },
       { title: 'วิชาเรียน', component: SubjectPage },
       { title: 'ภาคการศึกษา', component: SemesterPage },
       { title: 'การบ้าน', component: HomeworkPage },
