@@ -7,10 +7,9 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content>
   <ion-list>
-    <button ion-item *ngFor="let homework of homeworks" (click)="homeworkSelected(homework)">
+    <button ion-item *ngFor="let homework of homeworks" (press)="onPress(homework)">
       <ion-grid>
         <ion-row>
           <ion-col><h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge></h2></ion-col>

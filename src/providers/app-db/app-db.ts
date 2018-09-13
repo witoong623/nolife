@@ -127,6 +127,12 @@ export class AppDbProvider {
       });
   }
 
+  deleteHomework(homework: Homework): Promise<void> {
+    let deleteSql = 'delete from homeworks where id = ?';
+
+    return this.dbObjectPromise.then(db => db.executeSql(deleteSql, [homework.id]));
+  }
+
   saveHomework(homework: Homework): Promise<void> {
     let sql = 'insert into homeworks(topic,description,submitat,subId,semester,year) values(?,?,?,?,?,?)';
     let args = [

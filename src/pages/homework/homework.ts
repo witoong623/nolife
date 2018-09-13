@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
 import { Homework } from '../../models/models';
 import { AddHomeworkPage } from '../add-homework/add-homework';
 import { AppDbProvider } from '../../providers/app-db/app-db';
@@ -13,11 +13,47 @@ import { getCurrentSemester } from '../../utilities/datetimeutility';
 export class HomeworkPage {
   public homeworks: Homework[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appDb: AppDbProvider) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private appDb: AppDbProvider,
+              private actionSheetCtrl: ActionSheetController,
+              private alertCtrl: AlertController) {
   }
 
-  homeworkSelected(homework: Homework): void {
-
+  onPress(homework: Homework): void {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'ต้องการ',
+      buttons: [
+        {
+          text: 'ลบ',
+          role: 'destructive',
+          handler: () => {
+            let alert = this.alertCtrl.create({
+              title: `ลบ ${homework.topic}?`,
+              message: `ต้องการจะลบ ${homework.topic} ใช่หรือไม่`,
+              buttons: [
+                {
+                  text: 'ยกเลิก',
+                  role: 'cancel',
+                  handler: () => {
+                    console.log('Cancel clicked');
+                  }
+                },
+                {
+                  text: 'ตกลง',
+                  handler: () => {
+                    this.appDb.deleteHomework(homework).then(() => this.loadData());
+                  }
+                }
+              ]
+            });
+            alert.present();
+          },
+          icon: 'trash'
+        }
+      ]
+    });
+    actionSheet.present();
   }
 
   openAddHomework(): void {
@@ -25,6 +61,10 @@ export class HomeworkPage {
   }
 
   ionViewDidEnter(): void {
+    this.loadData();
+  }
+
+  private loadData() {
     this.appDb.getAllHomeworks(getCurrentSemester())
       .then(homeworks => this.homeworks = homeworks);
   }
