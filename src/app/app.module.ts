@@ -19,6 +19,7 @@ import { TimetabletabPage } from '../pages/timetabletab/timetabletab';
 import { AddtimetablePage } from '../pages/addtimetable/addtimetable';
 import { HomeworkPage } from '../pages/homework/homework';
 import { AddHomeworkPage } from '../pages/add-homework/add-homework';
+import { SubjectPage } from '../pages/subject/subject';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AddHomeworkPage } from '../pages/add-homework/add-homework';
     TimetabletabPage,
     AddtimetablePage,
     HomeworkPage,
-    AddHomeworkPage
+    AddHomeworkPage,
+    SubjectPage
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,8 @@ import { AddHomeworkPage } from '../pages/add-homework/add-homework';
     TimetabletabPage,
     AddtimetablePage,
     HomeworkPage,
-    AddHomeworkPage
+    AddHomeworkPage,
+    SubjectPage
   ],
   providers: [
     StatusBar,
