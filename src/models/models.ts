@@ -46,6 +46,25 @@ export class Period {
       return this._length;
     }
 
+    get dayOfWeekThai(): string {
+      switch (this.day) {
+        case DayOfWeek.Monday:
+          return 'จันทร์';
+        case DayOfWeek.Tuesday:
+          return 'อังคาร';
+        case DayOfWeek.Wednesday:
+          return 'พุธ';
+        case DayOfWeek.Thursday:
+          return 'พฤหัส';
+        case DayOfWeek.Friday:
+          return 'ศุกร์';
+        case DayOfWeek.Saturday:
+          return 'เสาร์';
+        case DayOfWeek.Sunday:
+          return 'อาทิตย์';
+      }
+    }
+
     get startMoment(): moment.Moment {
       return this._startMoment;
     }
