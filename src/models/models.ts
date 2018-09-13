@@ -71,21 +71,23 @@ export class Period {
 }
 
 export class Homework {
-  private _submitAtStr: string = null;
   private _submitAt: moment.Moment;
 
   constructor(public subject: Subject, public topic: string, public description: string, submitAtStr: string, public id?: number) {
     this._submitAt = moment(submitAtStr);
   }
 
-  get submitAtStr(): string {
-    if (this._submitAtStr === null) {
-      this._submitAtStr = this._submitAt.toISOString(true);
-    }
-    return this._submitAtStr;
-  }
-
   get submitAt(): moment.Moment {
     return this._submitAt;
+  }
+
+  get isOverdue(): boolean {
+    let now = moment();
+
+    if (now.isBefore(this._submitAt)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

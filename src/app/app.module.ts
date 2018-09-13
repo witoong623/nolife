@@ -2,6 +2,7 @@ import { AddSemesterPage } from './../pages/add-semester/add-semester';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { MomentModule } from 'ngx-moment';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -40,7 +41,8 @@ import { SubjectDetailPage } from '../pages/subject-detail/subject-detail';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    SuperTabsModule.forRoot()
+    SuperTabsModule.forRoot(),
+    MomentModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

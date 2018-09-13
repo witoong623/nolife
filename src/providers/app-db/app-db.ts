@@ -132,7 +132,7 @@ export class AppDbProvider {
     let args = [
       homework.topic,
       homework.description,
-      homework.submitAtStr,
+      homework.submitAt.toISOString(true),
       homework.subject.subId,
       homework.subject.semester.semester,
       homework.subject.semester.year

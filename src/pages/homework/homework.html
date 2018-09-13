@@ -13,13 +13,13 @@
     <button ion-item *ngFor="let homework of homeworks" (click)="homeworkSelected(homework)">
       <ion-grid>
         <ion-row>
-          <ion-col>{{homework.topic}}</ion-col>
+          <ion-col><h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge></h2></ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>{{homework.subject.name}}</ion-col>
+          <ion-col><h3>{{homework.subject.name}}</h3></ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>{{homework.submitAtStr}}</ion-col>
+          <ion-col>ส่งก่อน {{homework.submitAt | amLocale:'th' | amDateFormat:'Do MMMM YYYY เวลา hh:mm'}}</ion-col>
         </ion-row>
       </ion-grid>
     </button>
