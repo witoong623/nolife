@@ -1,6 +1,7 @@
 import { Semester, Period, Subject, Homework } from '../../models/models';
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { Platform } from 'ionic-angular';
 
 @Injectable()
 export class AppDbProvider {
@@ -14,7 +15,7 @@ export class AppDbProvider {
 
   private dbObjectPromise: Promise<SQLiteObject>;
 
-  constructor(private sqlite: SQLite) {
+  constructor(private sqlite: SQLite, private plt: Platform) {
     this.dbObjectPromise = this.connectToDb();
   }
 
@@ -140,6 +141,7 @@ export class AppDbProvider {
   }
 
   private async connectToDb(): Promise<SQLiteObject> {
+    await this.plt.ready();
     let db = await this.sqlite.create(this.options);
 
     let semestersSql = 'create table if not exists semesters (semester integer, year integer, primary key (semester, year))';
