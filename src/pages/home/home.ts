@@ -23,8 +23,17 @@ export class HomePage {
     sun: 6
   };
 
+  reverseDayRef = {
+    0: 'mon',
+    1: 'tue',
+    2: 'wed',
+    3: 'thu',
+    4: 'fri',
+    5: 'sat',
+    6: 'sun'
+  };
+
   constructor(public navCtrl: NavController,public plt: Platform, private appDb: AppDbProvider) {
-    this.selectedTabIndex = this.selectTabIndex();
   }
 
   openAddTimetable(): void {
@@ -66,6 +75,9 @@ export class HomePage {
           }
         }
         
+        // availableDay is for fiding index of selected tab
+        let availableDay: string[] = [];
+
         // build array of timetable
         for (let key in dayofweekDic) {
           if (dayofweekDic.hasOwnProperty(key)) {
@@ -76,22 +88,48 @@ export class HomePage {
             vm.data = dayofweekDic[key];
 
             this.timeTableDays.push(vm);
+            availableDay.push(key);
           }
         }
-
+        
+        this.selectedTabIndex = this.selectTabIndex(availableDay);
         this.timeTableDays.sort((a, b) => this.dayOrderRef[a.day] - this.dayOrderRef[b.day]);
       })
       .catch(e => console.log(e));
   }
 
-  private selectTabIndex(): number {
+  private selectTabIndex(availableDay: string[]): number {
+    if (availableDay.length === 0) {
+      return -1;
+    }
+
     let now = new Date();
-    return now.getDay() - 1;
+    let todayOfWeek = (now.getDay() + 6) % 7
+    let todayName = this.reverseDayRef[todayOfWeek];
+
+    let dayIndex = availableDay.indexOf(todayName);
+
+    if (dayIndex >= 0) {
+      return dayIndex;
+    } else {
+      // today is not in available day, find next day
+      let loopCount = 1;
+      for (let nextDay = (todayOfWeek + 1) % 7; loopCount < 7; nextDay += (nextDay + 1) % 7) {
+        dayIndex = availableDay.indexOf(this.reverseDayRef[nextDay])
+        if (dayIndex >= 0) {
+          return dayIndex;
+        } else {
+          loopCount++;
+        }
+      }
+    }
+
+    // code shouldn't reach here, just return -1
+    return -1;
   }
 
   ionViewDidEnter() {
-    this.plt.ready()
-      .then(src => this.createTabTimetable());
+    this.createTabTimetable()
   }
 
 }
