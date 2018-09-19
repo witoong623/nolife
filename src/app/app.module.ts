@@ -22,6 +22,7 @@ import { HomeworkPage } from '../pages/homework/homework';
 import { AddHomeworkPage } from '../pages/add-homework/add-homework';
 import { SubjectPage } from '../pages/subject/subject';
 import { SubjectDetailPage } from '../pages/subject-detail/subject-detail';
+import { SettingPage } from '../pages/setting/setting';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { SubjectDetailPage } from '../pages/subject-detail/subject-detail';
     HomeworkPage,
     AddHomeworkPage,
     SubjectPage,
-    SubjectDetailPage
+    SubjectDetailPage,
+    SettingPage
   ],
   imports: [
     BrowserModule,
@@ -57,7 +59,8 @@ import { SubjectDetailPage } from '../pages/subject-detail/subject-detail';
     HomeworkPage,
     AddHomeworkPage,
     SubjectPage,
-    SubjectDetailPage
+    SubjectDetailPage,
+    SettingPage
   ],
   providers: [
     StatusBar,
