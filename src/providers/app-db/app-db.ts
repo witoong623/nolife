@@ -139,17 +139,17 @@ export class AppDbProvider {
     return await db.executeSql(sql, [periodId]);
   }
 
-  async saveNotification(notification: PeriodNotification): Promise<number> {
-    let sql = 'insert into notifications(subId, periodId, semester, year, beforeMin) values(?,?,?,?,?)';
+  async savePeriodNotification(notification: PeriodNotification): Promise<number> {
+    let sql = 'insert into period_notifications(subId, periodId, semester, year, beforeMin) values(?,?,?,?,?)';
     let db = await this.dbObjectPromise;
     let results = await db.executeSql(sql, [notification.subId, notification.periodId, notification.semester.semester, notification.semester.year, notification.beforeMin]);
 
     return results.insertId;
   }
 
-  async deleteAllNotification(): Promise<void> {
+  async deleteAllPeriodNotification(): Promise<void> {
     let db = await this.dbObjectPromise;
-    await db.executeSql('delete from notifications', []);
+    await db.executeSql('delete from period_notifications', []);
   }
 
   deleteHomework(homework: Homework): Promise<void> {
@@ -185,7 +185,7 @@ export class AppDbProvider {
                       'submitat text, subId text, semester integer, year integer,' +
                       'foreign key(subId,semester,year) references subjects(subId,semester,year) on delete cascade)';
     
-    let notiSql = 'create table if not exists notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';
+    let notiSql = 'create table if not exists period_notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';
 
     let semesterPromise = db.executeSql(semestersSql, []);
     let subjectPromise = db.executeSql(subjectSql, []);

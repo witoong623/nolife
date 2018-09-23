@@ -86,7 +86,7 @@ export class AddtimetablePage {
     }
     
     for (let notification of notifications) {
-      let notiId = await this.appDb.saveNotification(notification);
+      let notiId = await this.appDb.savePeriodNotification(notification);
       let scheduleOption = {
         id: notiId,
         title: `วิชาต่อไป ${notification.subName}`,
