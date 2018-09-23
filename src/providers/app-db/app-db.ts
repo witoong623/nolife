@@ -183,7 +183,7 @@ export class AppDbProvider {
         'subId text, semester integer, year integer, foreign key(subId, semester, year) references subjects(subId, semester, year) on delete cascade)';
     let homeworkSql = 'create table if not exists homeworks (id integer primary key, topic	text, description text,' +
                       'submitat text, subId text, semester integer, year integer,' +
-                      'foreign key(subId,semester,year) references subjects(subId,semester,year))';
+                      'foreign key(subId,semester,year) references subjects(subId,semester,year) on delete cascade)';
     
     let notiSql = 'create table if not exists notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';
 
