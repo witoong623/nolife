@@ -125,7 +125,7 @@ export class HomePage {
     }
 
     // code shouldn't reach here, just return -1
-    return -1;
+    return 0;
   }
 
   ionViewDidEnter() {

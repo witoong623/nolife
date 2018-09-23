@@ -34,10 +34,7 @@ export class HomeworkPage {
               buttons: [
                 {
                   text: 'ยกเลิก',
-                  role: 'cancel',
-                  handler: () => {
-                    console.log('Cancel clicked');
-                  }
+                  role: 'cancel'
                 },
                 {
                   text: 'ตกลง',

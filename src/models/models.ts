@@ -25,7 +25,7 @@ export class Period {
 
   constructor(public day: DayOfWeek, public startTime: string, public endTime: string, 
     public room: string, public subId: string, public semester: Semester, public id?: number) {
-      this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm');;
+      this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm');
     }
 
     get length(): string {
@@ -89,5 +89,29 @@ export class Homework {
     } else {
       return true;
     }
+  }
+}
+
+export class PeriodNotification {
+  private _startMoment: moment.Moment;
+
+  constructor(public subId: string,
+              public subName: string,
+              public semester: Semester,
+              public periodId: number,
+              public startTime: string,
+              public beforeMin: number,
+              public weekday: string,
+              public room: string,
+              public id?: number) {
+                this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm').add(beforeMin, 'm');
+              }
+
+  get hour(): number {
+    return this._startMoment.hour();
+  }
+
+  get minute(): number {
+    return this._startMoment.minute();
   }
 }

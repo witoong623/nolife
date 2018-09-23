@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { SemesterPage } from '../pages/semester/semester';
 import { HomeworkPage } from '../pages/homework/homework';
 import { SubjectPage } from '../pages/subject/subject';
+import { SettingPage } from '../pages/setting/setting';
 
 @Component({
   templateUrl: 'app.html'
@@ -27,14 +28,13 @@ export class MyApp {
       { title: 'วิชาเรียน', component: SubjectPage },
       { title: 'ภาคการศึกษา', component: SemesterPage },
       { title: 'การบ้าน', component: HomeworkPage },
+      { title: 'ตั้งค่า', component: SettingPage }
     ];
 
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });

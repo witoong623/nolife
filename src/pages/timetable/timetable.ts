@@ -68,8 +68,6 @@ export class TimetablePage {
             this.timeTableDays.push(vm);
           }
         }
-
-        console.log(`there are ${this.timeTableDays.length} items in timeTableDays`);
       })
       .catch(e => console.log(e));
   }

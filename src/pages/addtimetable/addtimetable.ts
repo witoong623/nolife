@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, DateTime } from 'ionic-angular';
 import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
-import { Semester, Subject, Period, DayOfWeek } from '../../models/models';
+import { Semester, Subject, Period, DayOfWeek, PeriodNotification } from '../../models/models';
 import { AppDbProvider } from '../../providers/app-db/app-db';
-import { getCurrentSemester } from '../../utilities/datetimeutility';
+import { getCurrentSemester, getJSDay } from '../../utilities/datetimeutility';
+import { Storage } from '@ionic/storage';
+import * as settings from '../setting/setting';
+
+declare var cordova;
 
 @IonicPage()
 @Component({
@@ -13,8 +17,9 @@ import { getCurrentSemester } from '../../utilities/datetimeutility';
 export class AddtimetablePage {
   form: FormGroup;
   availableSemesters: Semester[];
+  private notibeforePeriod: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private appDb: AppDbProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder, private appDb: AppDbProvider, private storage: Storage) {
     const currentSemester = getCurrentSemester();
 
     // TODO: do i have to specify default value of semester?
@@ -46,27 +51,59 @@ export class AddtimetablePage {
     control.removeAt(i);
   }
 
-  onSubmit(val: any): void {
-    console.log(val);
+  async onSubmit(val: any): Promise<void> {
     let splitedSemester: string[] = val.semester.split(' ');
     let semester = new Semester(parseInt(splitedSemester[0]), parseInt(splitedSemester[1]));
     let s = new Subject(val.subId, val.subName, val.lecturer, semester);
     let periods: Period[] = [];
 
     val.periods.forEach(period => {
-      let np = new Period(<DayOfWeek>period.day, period.startTime, period.endTime, period.room, val.subId, getCurrentSemester());
+      let np = new Period(<DayOfWeek>period.day, period.startTime, period.endTime, period.room, val.subId, semester);
       periods.push(np);
     });
     s.periods = periods;
     
-    this.appDb.saveTimetable(s)
-        .then(() => this.navCtrl.pop())
-        .catch(e => console.log(e));
+    await this.appDb.saveTimetable(s);
+    await this.setupNotification(s.subId, semester);
+    this.navCtrl.pop();
+  }
+
+  async setupNotification(subId: string, semester: Semester): Promise<void> {
+    let subject = await this.appDb.getSubject(subId, semester);
+    subject.periods = await this.appDb.getPeriods(subId, semester);
+
+    let notifications: PeriodNotification[] = [];
+
+    for (let period of subject.periods) {
+      let notification = new PeriodNotification(subject.subId,
+                                                subject.name,
+                                                subject.semester,
+                                                period.id,
+                                                period.startTime,
+                                                this.notibeforePeriod,
+                                                period.day, period.room);
+      notifications.push(notification);
+    }
+    
+    for (let notification of notifications) {
+      let notiId = await this.appDb.saveNotification(notification);
+      let scheduleOption = {
+        id: notiId,
+        title: `วิชาต่อไป ${notification.subName}`,
+        text: `วิชา ${notification.subName}\nเวลา ${notification.startTime} ห้อง ${notification.room}`,
+        trigger: { every : { weekday: getJSDay(notification.weekday), hour: notification.hour, minute: notification.minute, count: 1 } }
+      };
+
+      cordova.plugins.notification.local.schedule(scheduleOption);
+    }
+  }
+
+  async loadData(): Promise<void> {
+    this.availableSemesters = await this.appDb.getAllSemesters();
+    this.notibeforePeriod = await settings.getSettingValue(settings.NOTIFYBEFOREPERIOD, settings.NOTIFYBEFOREPERIOD_DEFAULT, this.storage);
   }
 
   ionViewDidLoad() {
-    this.appDb.getAllSemesters()
-        .then(semesters => this.availableSemesters = semesters)
-        .catch(e => console.log('AddtimetablePage', e));
+    this.loadData();
   }
 }

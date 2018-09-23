@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { MomentModule } from 'ngx-moment';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -45,6 +46,9 @@ import { SettingPage } from '../pages/setting/setting';
     IonicModule.forRoot(MyApp),
     SuperTabsModule.forRoot(),
     MomentModule,
+    IonicStorageModule.forRoot({
+      name: 'settings'
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
