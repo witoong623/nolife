@@ -128,7 +128,7 @@ export class HomePage {
     return 0;
   }
 
-  ionViewDidEnter() {
+  ionViewDidLoad() {
     this.createTabTimetable()
   }
 
