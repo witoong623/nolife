@@ -13,7 +13,7 @@
     <p>อาจารย์ {{subject.lecturer}} <br> ภาคเรียนที่ {{subject.semester.semester}} ปีการศึกษา {{subject.semester.year}}</p>
   </div>
   <ion-list>
-    <ion-item *ngFor="let period of subject.periods">
+    <ion-item *ngFor="let period of subject.periods" (press)="onPress(period)">
       <h3>วัน {{period.dayOfWeekThai}} ห้อง {{period.room}}</h3>
       <h4>เวลา {{period.startTime}} ถึง {{period.endTime}}</h4>
     </ion-item>
