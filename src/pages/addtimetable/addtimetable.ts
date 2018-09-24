@@ -91,7 +91,7 @@ export class AddtimetablePage {
         id: notiId,
         title: `วิชาต่อไป ${notification.subName}`,
         text: `วิชา ${notification.subName}\nเวลา ${notification.startTime} ห้อง ${notification.room}`,
-        trigger: { every : { weekday: getJSDay(notification.weekday), hour: notification.hour, minute: notification.minute, count: 1 } }
+        trigger: { every : { weekday: getJSDay(notification.weekday), hour: notification.hour, minute: notification.minute } }
       };
 
       cordova.plugins.notification.local.schedule(scheduleOption);
