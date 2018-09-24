@@ -1,4 +1,4 @@
-import { Semester, Period, Subject, Homework, PeriodNotification } from '../../models/models';
+import { Semester, Period, Subject, Homework, PeriodNotification, HomeworkNotification } from '../../models/models';
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Platform } from 'ionic-angular';
@@ -147,6 +147,14 @@ export class AppDbProvider {
     return results.insertId;
   }
 
+  async saveHomeworkNotification(hwNotification: HomeworkNotification): Promise<number> {
+    let sql = 'insert into homework_notifications(subId, hwId, semester, year, beforeDay) values(?,?,?,?,?)';
+    let db = await this.dbObjectPromise;
+    let results = await db.executeSql(sql, [hwNotification.subId, hwNotification.hwId, hwNotification.semester.semester, hwNotification.semester.year, hwNotification.beforeDay]);
+
+    return results.insertId;
+  }
+
   async deleteAllPeriodNotification(): Promise<void> {
     let db = await this.dbObjectPromise;
     await db.executeSql('delete from period_notifications', []);
@@ -158,7 +166,7 @@ export class AppDbProvider {
     return this.dbObjectPromise.then(db => db.executeSql(deleteSql, [homework.id]));
   }
 
-  saveHomework(homework: Homework): Promise<void> {
+  async saveHomework(homework: Homework): Promise<number> {
     let sql = 'insert into homeworks(topic,description,submitat,subId,semester,year) values(?,?,?,?,?,?)';
     let args = [
       homework.topic,
@@ -168,7 +176,11 @@ export class AppDbProvider {
       homework.subject.semester.semester,
       homework.subject.semester.year
     ]
-    return this.dbObjectPromise.then(db => db.executeSql(sql, args));
+    
+    let db = await this.dbObjectPromise;
+    let results = await db.executeSql(sql, args);
+
+    return results.insertId;
   }
 
   private async connectToDb(): Promise<SQLiteObject> {
@@ -185,15 +197,17 @@ export class AppDbProvider {
                       'submitat text, subId text, semester integer, year integer,' +
                       'foreign key(subId,semester,year) references subjects(subId,semester,year) on delete cascade)';
     
-    let notiSql = 'create table if not exists period_notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';
+    let periodNotiSql = 'create table if not exists period_notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';
+    let homeworkNotiSql = 'create table if not exists homework_notifications (id integer primary key, subId text, hwId integer,semester integer, year integer, beforeDay integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(hwId) references homeworks(id) on delete cascade)';
 
     let semesterPromise = db.executeSql(semestersSql, []);
     let subjectPromise = db.executeSql(subjectSql, []);
     let periodsPromise = db.executeSql(periodSql, []);
     let homeworksPromise = db.executeSql(homeworkSql, []);
-    let notiPromise = db.executeSql(notiSql, []);
+    let periodNotiPromise = db.executeSql(periodNotiSql, []);
+    let homeworkNotiPromise = db.executeSql(homeworkNotiSql, []);
 
-    await Promise.all([semesterPromise, subjectPromise, periodsPromise, homeworksPromise, notiPromise]);
+    await Promise.all([semesterPromise, subjectPromise, periodsPromise, homeworksPromise, periodNotiPromise, homeworkNotiPromise]);
 
     return db;
   }

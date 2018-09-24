@@ -104,7 +104,7 @@ export class PeriodNotification {
               public weekday: string,
               public room: string,
               public id?: number) {
-                this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm').add(beforeMin, 'm');
+                this._startMoment = moment(`1-1-1970 ${this.startTime}`, 'DD-MM-YYYY HH:mm').subtract(beforeMin, 'm');
               }
 
   get hour(): number {
@@ -114,4 +114,17 @@ export class PeriodNotification {
   get minute(): number {
     return this._startMoment.minute();
   }
+}
+
+export class HomeworkNotification {
+  constructor(public subId: string,
+              public subName: string,
+              public semester: Semester,
+              public hwTopic: string,
+              public hwId: number,
+              public submitAt: moment.Moment,
+              public beforeDay: number,
+              public id?: number) {
+                this.submitAt = this.submitAt.subtract(beforeDay, 'd');
+              }
 }
