@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <super-tabs *ngIf="timeTableDays.length > 0; else showEmpty" [config]="{sideMenu: 'left'}" [selectedTabIndex]="selectedTabIndex">
+  <super-tabs *ngIf="timeTableDays.length > 0; else showEmpty" [config]="{sideMenu: 'left'}" [selectedTabIndex]="selectedTabIndex" toolbarBackground="light">
     <div *ngFor="let tb of timeTableDays">
       <super-tab [root]="tb.page" title="{{tb.displayTitle}}" [rootParams]="{dayOftimetable: tb.day, displayTitle: tb.displayTitle, data: tb.data}"></super-tab>
     </div>
