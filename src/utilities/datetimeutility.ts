@@ -15,7 +15,9 @@ export function getCurrentSemester(): Semester {
       currentSemester = 3
     }
 
-    return new Semester(currentSemester, currentYear);
+    //return new Semester(currentSemester, currentYear);
+    //TODO: for testing purpose, set semester to first, 2018
+    return new Semester(1, 2018);
 }
 
 export function getDisplayTitle(key: string) {
