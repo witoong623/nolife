@@ -10,6 +10,12 @@ export enum DayOfWeek {
   Sunday = 'sun'
 }
 
+export enum HomeworkStatus {
+  Undone = 'yet',
+  Done = 'done',
+  Overdue = 'overdue'
+}
+
 export class Semester {
   constructor(public semester: number, public year: number) { }
 }
@@ -73,7 +79,7 @@ export class Period {
 export class Homework {
   private _submitAt: moment.Moment;
 
-  constructor(public subject: Subject, public topic: string, public description: string, submitAtStr: string, public id?: number) {
+  constructor(public subject: Subject, public topic: string, public description: string, submitAtStr: string, public status: HomeworkStatus, public id?: number) {
     this._submitAt = moment(submitAtStr);
   }
 

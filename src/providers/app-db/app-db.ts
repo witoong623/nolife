@@ -1,4 +1,4 @@
-import { Semester, Period, Subject, Homework, PeriodNotification, HomeworkNotification } from '../../models/models';
+import { Semester, Period, Subject, Homework, PeriodNotification, HomeworkNotification, HomeworkStatus } from '../../models/models';
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Platform } from 'ionic-angular';
@@ -58,17 +58,27 @@ export class AppDbProvider {
     return new Subject(row.subId, row.name, row.lecturer, semester);
   }
 
-  async getAllHomeworks(curSemester: Semester): Promise<Homework[]> {
-    let sql = 'select * from homeworks where semester = ? and year = ?';
+  async getAllHomeworks(curSemester: Semester, status?: HomeworkStatus): Promise<Homework[]> {
+    let sql: string = '';
+    let args: any[];
+
+    if (status == null) {
+      sql = 'select * from homeworks where semester = ? and year = ?';
+      args = [curSemester.semester, curSemester.year]
+    } else {
+      sql = 'select * from homeworks where semester = ? and year = ? and status = ?';
+      args = [curSemester.semester, curSemester.year, status]
+    }
+    
     let db = await this.dbObjectPromise;
-    let results = await db.executeSql(sql, [curSemester.semester, curSemester.year]);
+    let results = await db.executeSql(sql, args);
     let homeworksList: Homework[] = [];
 
     for (let i = 0; i < results.rows.length; i++) {
       let row = results.rows.item(i);
       let subject = await this.getSubject(row.subId, curSemester);
 
-      homeworksList.push(new Homework(subject, row.topic, row.description, row.submitat, row.id));
+      homeworksList.push(new Homework(subject, row.topic, row.description, row.submitat, row.status, row.id));
     }
 
     return homeworksList;
@@ -183,6 +193,13 @@ export class AppDbProvider {
     return results.insertId;
   }
 
+  async updateHomework(id: number, status: HomeworkStatus): Promise<any> {
+    let sql = 'update homeworks set status = ? where id = ?';
+    let db = await this.dbObjectPromise;
+
+    return db.executeSql(sql, [status, id]);
+  }
+
   private async connectToDb(): Promise<SQLiteObject> {
     await this.plt.ready();
     let db = await this.sqlite.create(this.options);
@@ -194,7 +211,7 @@ export class AppDbProvider {
     let periodSql = 'create table if not exists periods (id integer primary key, day text, startTime text, endTime text, room text, ' +
         'subId text, semester integer, year integer, foreign key(subId, semester, year) references subjects(subId, semester, year) on delete cascade)';
     let homeworkSql = 'create table if not exists homeworks (id integer primary key, topic	text, description text,' +
-                      'submitat text, subId text, semester integer, year integer,' +
+                      'submitat text, subId text, semester integer, year integer, status text default "yet",' +
                       'foreign key(subId,semester,year) references subjects(subId,semester,year) on delete cascade)';
     
     let periodNotiSql = 'create table if not exists period_notifications (id integer primary key, subId text, periodId integer, semester integer, year integer, beforeMin integer, foreign key(subId, semester, year) references subjects(subId,semester,year) on delete cascade, foreign key(periodId) references periods(id) on delete cascade)';

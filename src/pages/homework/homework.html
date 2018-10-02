@@ -3,27 +3,99 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
+
+
     <ion-title>การบ้าน</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <button ion-item *ngFor="let homework of homeworks" (press)="onPress(homework)">
-      <ion-grid>
-        <ion-row>
-          <ion-col><h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge></h2></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col><h3>{{homework.subject.name}}</h3></ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>ส่งก่อน {{homework.submitAt | amLocale:'th' | amDateFormat:'Do MMMM YYYY เวลา hh:mm'}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </button>
-  </ion-list>
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="status">
+      <ion-segment-button value="yet">
+        ยังไม่เสร็จ
+      </ion-segment-button>
+      <ion-segment-button value="done">
+        เสร็จแล้ว
+      </ion-segment-button>
+      <ion-segment-button value="top">
+        เกินกำหนด
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <div [ngSwitch]="status">
+
+    <ion-list *ngSwitchCase="'yet'">
+      <button ion-item *ngFor="let homework of undoneHomeworks" (press)="onPress(homework)">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge>
+              </h2>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <h3>{{homework.subject.name}}</h3>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>ส่งก่อน {{homework.submitAt | amLocale:'th' | amDateFormat:'Do MMMM YYYY เวลา hh:mm'}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </button>
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'done'">
+        <button ion-item *ngFor="let homework of doneHomeworks" (press)="onPress(homework)">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge>
+                </h2>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <h3>{{homework.subject.name}}</h3>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>ส่งก่อน {{homework.submitAt | amLocale:'th' | amDateFormat:'Do MMMM YYYY เวลา hh:mm'}}</ion-col>
+            </ion-row>
+          </ion-grid>
+        </button>
+      </ion-list>
+
+      <ion-list *ngSwitchCase="'overdue'">
+          <button ion-item *ngFor="let homework of overdueHomeworks" (press)="onPress(homework)">
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <h2>{{homework.topic}} <ion-badge color="danger" *ngIf="homework.isOverdue">เกินกำหนด</ion-badge>
+                  </h2>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <h3>{{homework.subject.name}}</h3>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>ส่งก่อน {{homework.submitAt | amLocale:'th' | amDateFormat:'Do MMMM YYYY เวลา hh:mm'}}</ion-col>
+              </ion-row>
+            </ion-grid>
+          </button>
+        </ion-list>
+
+  </div>
+
+
+
   <ion-fab bottom right>
-    <button ion-fab color="primary" (click)="openAddHomework()"><ion-icon name="add"></ion-icon></button>
+    <button ion-fab color="primary" (click)="openAddHomework()">
+      <ion-icon name="add"></ion-icon>
+    </button>
   </ion-fab>
 </ion-content>

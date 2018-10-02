@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
-import { Homework } from '../../models/models';
+import { Homework, HomeworkStatus } from '../../models/models';
 import { AddHomeworkPage } from '../add-homework/add-homework';
 import { AppDbProvider } from '../../providers/app-db/app-db';
 import { getCurrentSemester } from '../../utilities/datetimeutility';
@@ -11,7 +11,10 @@ import { getCurrentSemester } from '../../utilities/datetimeutility';
   templateUrl: 'homework.html',
 })
 export class HomeworkPage {
-  public homeworks: Homework[];
+  status: string = HomeworkStatus.Undone;
+  undoneHomeworks: Homework[];
+  doneHomeworks: Homework[];
+  overdueHomeworks: Homework[];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -47,6 +50,13 @@ export class HomeworkPage {
             alert.present();
           },
           icon: 'trash'
+        },
+        {
+          text: 'ทำเสร็จแล้ว',
+          handler: () => {
+            this.appDb.updateHomework(homework.id, HomeworkStatus.Done).then(() => this.loadData());
+          },
+          icon: 'checkmark-circle'
         }
       ]
     });
@@ -61,8 +71,15 @@ export class HomeworkPage {
     this.loadData();
   }
 
-  private loadData() {
-    this.appDb.getAllHomeworks(getCurrentSemester())
-      .then(homeworks => this.homeworks = homeworks);
+  private async loadData() {
+    let homeworks = await this.appDb.getAllHomeworks(getCurrentSemester());
+    this.undoneHomeworks = homeworks.filter(homework => homework.status == HomeworkStatus.Undone);
+    this.doneHomeworks = homeworks.filter(homeworks => homeworks.status == HomeworkStatus.Done);
+    this.overdueHomeworks = homeworks.filter(homeworks => homeworks.isOverdue);
+
+    let overdueUpdatePromises = this.overdueHomeworks.filter(homework => homework.status == HomeworkStatus.Undone)
+      .map(homework => this.appDb.updateHomework(homework.id, HomeworkStatus.Overdue));
+
+    await Promise.all(overdueUpdatePromises);
   }
 }
