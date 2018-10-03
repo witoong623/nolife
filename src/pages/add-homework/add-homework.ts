@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppDbProvider } from '../../providers/app-db/app-db';
-import { Subject, Semester, Homework, HomeworkNotification } from '../../models/models';
+import { Subject, Semester, Homework, HomeworkNotification, HomeworkStatus } from '../../models/models';
 import { getCurrentSemester } from '../../utilities/datetimeutility';
 import { ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -47,7 +47,7 @@ export class AddHomeworkPage {
   }
 
   async onSubmit(val: any): Promise<void> {
-    let homework = new Homework(val.subject, val.topic, val.description, `${val.submitDate} ${val.submitTime}`);
+    let homework = new Homework(val.subject, val.topic, val.description, `${val.submitDate} ${val.submitTime}`, HomeworkStatus.Undone);
     let hwId = await this.appDb.saveHomework(homework);
     homework.id = hwId;
     await this.setupNotification(homework.subject, homework, homework.subject.semester)
