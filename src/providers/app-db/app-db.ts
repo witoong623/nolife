@@ -117,6 +117,22 @@ export class AppDbProvider {
       });
   }
 
+  async getHomeworkNotification(homework: Homework): Promise<HomeworkNotification> {
+    let sql = 'select * from homework_notifications where hwId = ?';
+    let db = await this.dbObjectPromise;
+    let results = await db.executeSql(sql, [homework.id]);
+
+    if (results.rows.length >= 1) {
+      let firstRow = results.rows.item(0);
+      let semester = new Semester(firstRow.semester, firstRow.year)
+      //let subject = await this.getSubject(firstRow.subId, semester);
+
+      return new HomeworkNotification(homework.subject.subId, homework.subject.name, semester, homework.topic, homework.id, homework.submitAt, firstRow.beforeDay, firstRow.id);
+    } else {
+      return null;
+    }
+  }
+
   saveSemester(semester: Semester): Promise<void> {
     let sql = 'insert into semesters(semester, year) values(?, ?)';
     return this.dbObjectPromise.then(db => db.executeSql(sql, [semester.semester, semester.year]));

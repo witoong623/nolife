@@ -24,6 +24,7 @@ import { AddHomeworkPage } from '../pages/add-homework/add-homework';
 import { SubjectPage } from '../pages/subject/subject';
 import { SubjectDetailPage } from '../pages/subject-detail/subject-detail';
 import { SettingPage } from '../pages/setting/setting';
+import { AppNotificationProvider } from '../providers/AppNotificationProvider';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { SettingPage } from '../pages/setting/setting';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SQLite,
-    AppDbProvider
+    AppDbProvider,
+    AppNotificationProvider
   ]
 })
 export class AppModule {}

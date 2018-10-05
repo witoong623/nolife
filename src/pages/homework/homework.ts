@@ -4,6 +4,7 @@ import { Homework, HomeworkStatus } from '../../models/models';
 import { AddHomeworkPage } from '../add-homework/add-homework';
 import { AppDbProvider } from '../../providers/app-db/app-db';
 import { getCurrentSemester } from '../../utilities/datetimeutility';
+import { AppNotificationProvider } from '../../providers/AppNotificationProvider';
 
 @IonicPage()
 @Component({
@@ -20,7 +21,8 @@ export class HomeworkPage {
               public navParams: NavParams,
               private appDb: AppDbProvider,
               private actionSheetCtrl: ActionSheetController,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private appNoti: AppNotificationProvider) {
   }
 
   onPress(homework: Homework): void {
@@ -54,7 +56,7 @@ export class HomeworkPage {
         {
           text: 'ทำเสร็จแล้ว',
           handler: () => {
-            this.appDb.updateHomework(homework.id, HomeworkStatus.Done).then(() => this.loadData());
+            this.appDb.updateHomework(homework.id, HomeworkStatus.Done).then(() => this.appNoti.deleteHomeworkNotification(homework)).then(() => this.loadData());
           },
           icon: 'checkmark-circle'
         }
